@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
+import { usePublicGists } from "../../hooks/usePublicGistsContext";
 import {
   ColFSWrapper,
   CSBWrapper,
@@ -13,6 +14,7 @@ export const GistPage = () => {
   const [loaded, setLoaded] = useState(false);
   const navigate = useNavigate();
   const [showPersonalControls, setShowPersonalControls] = useState(false);
+  const{selectedGist} = usePublicGists();
 
   const editGist = useCallback(() => {
     // navigate(`/edit/${gistAllData.id}`);
@@ -32,6 +34,7 @@ export const GistPage = () => {
   return (
     <HomePageLayout>
       <CSBWrapper>
+        {JSON.stringify(selectedGist)}
         {/* {loaded ? <GistMeta isInTable={false} gist={gistAllData} /> : null} */}
         {/* {loaded ? (
           <GistUtils

@@ -8,6 +8,7 @@ import { usePublicGists } from "../../hooks/usePublicGistsContext";
 function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
 
   let navigate = useNavigate();
+  let {setSelectedGist} = usePublicGists();
 
 
   const columns = [
@@ -55,7 +56,7 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
       key: "actions",
       width: "8%",
       render: (text, record, index) => {
-        return null;
+
       },
     },
   ];
@@ -76,6 +77,8 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
       onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
+            setSelectedGist(record.gist);
+
             navigate(`/gist/${record.gist.id}`);
           },
         };

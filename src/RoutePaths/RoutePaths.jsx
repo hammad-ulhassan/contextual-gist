@@ -26,7 +26,14 @@ export const RoutePaths = () => {
         />
 
         <Route path="gist">
-          <Route path=":id" element={<GistPage />} />
+          <Route
+            path=":id"
+            element={
+              <PublicGistsContextProvider>
+                <GistPage />
+              </PublicGistsContextProvider>
+            }
+          />
         </Route>
         <Route path="user">
           <Route path=":login" element={<UserPage />} />
