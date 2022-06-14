@@ -3,53 +3,61 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
-import { usePublicGists } from "../../hooks/usePublicGistsContext";
 import {
   ColFSWrapper,
   CSBWrapper,
   HomePageLayout,
 } from "../../shared/components/styledComponent";
+import GistUtils from "../../components/GistUtils/GistUtils";
+import { getGist } from "../../api/gists";
 
 export const GistPage = () => {
-  const [loaded, setLoaded] = useState(false);
+  let { id } = useParams();
   const navigate = useNavigate();
+  const [loaded, setLoaded] = useState(false);
+  const [gistAllData, setGistAllData] = useState(null);
   const [showPersonalControls, setShowPersonalControls] = useState(false);
-  const{selectedGist} = usePublicGists();
 
   const editGist = useCallback(() => {
     // navigate(`/edit/${gistAllData.id}`);
   }, []);
 
-  function deleteGist() {
+  function deleteGist() {}
 
-  }
-
-  function onForkGist() {
-  }
+  function onForkGist() {}
 
   function onStarGist() {
     //[redundancy todo]
   }
 
+  useEffect(() => {
+    setLoaded(false);
+
+    getGist(id).then((selectedGistAllData) => {
+      setGistAllData(selectedGistAllData);
+      setLoaded(true);
+    });
+  }, [id]);
+
   return (
     <HomePageLayout>
       <CSBWrapper>
-        {JSON.stringify(selectedGist)}
-        {/* {loaded ? <GistMeta isInTable={false} gist={gistAllData} /> : null} */}
-        {/* {loaded ? (
+        {/* {JSON.stringify(selectedGist)} */}
+        {loaded ? <GistMeta isInTable={false} gist={gistAllData} /> : null}
+        {loaded ? (
           <GistUtils
             forks={gistAllData?.forks}
             showPersonalControls={showPersonalControls}
-            isLoggedIn={isLoggedIn}
+            isLoggedIn={true}
             handleGistEdit={editGist}
             handleGistDelete={deleteGist}
             handleForkGist={onForkGist}
             handleGistStar={onStarGist}
           />
-        ) : null} */}
+        ) : null}
       </CSBWrapper>
       <ColFSWrapper gap="0.5vh">
-        {/* {loaded ? (
+        {loaded ? (
           Object.keys(gistAllData?.files)
             .map((fn) => gistAllData?.files[fn])
             .map((file, index) => (
@@ -63,7 +71,7 @@ export const GistPage = () => {
             ))
         ) : (
           <Spin size="large" />
-        )} */}
+        )}
       </ColFSWrapper>
     </HomePageLayout>
   );

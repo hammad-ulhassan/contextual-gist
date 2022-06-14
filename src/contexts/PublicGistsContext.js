@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { getAllPublicGists } from "../api/gists";
+import { getAllPublicGists, getGist } from "../api/gists";
 
 const PublicGistsContext = createContext();
 
@@ -8,7 +8,6 @@ export default function PublicGistsContextProvider({ children }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
-  const [selectedGist, setSelectedGist] = useState({});
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +19,7 @@ export default function PublicGistsContextProvider({ children }) {
 
   return (
     <PublicGistsContext.Provider
-      value={{ gists, loading, selectedGist, setPage, setPageSize, setSelectedGist }}
+      value={{ gists, loading, setPage, setPageSize }}
     >
       {children}
     </PublicGistsContext.Provider>
