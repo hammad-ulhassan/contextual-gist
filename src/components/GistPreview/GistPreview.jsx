@@ -26,7 +26,6 @@ export default function GistPreview({ gist, splitter }) {
 
   return (
     <GistContainer>
-      {/* memoize [todo] */}
       <GistMeta isInTable={false} gist={gist} />
       <CodeView
         loaded={loaded}

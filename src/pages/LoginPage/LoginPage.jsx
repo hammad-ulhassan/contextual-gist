@@ -3,12 +3,16 @@ import { Formik, Form } from "formik";
 import InputField from "../../components/InputField/InputField";
 import { LOGINLABEL, TOKENLABEL, USERNAMELABEL } from "./constants";
 import validationSchema from "./validationSchema";
+import useCredentialContext from '../../hooks/useCredentialContext';
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const {setUsername, setToken} = useCredentialContext();
   const initialValues = {
     username: "",
     token: "",
   };
+  const navigate = useNavigate();
 
   const myValidationSchema = validationSchema;
 
@@ -17,6 +21,9 @@ function LoginPage() {
       initialValues={initialValues}
       validationSchema={myValidationSchema}
       onSubmit={({ username, token }, actions) => {
+        setUsername(username);
+        setToken(token);
+        navigate('/home')
       }}
     >
       <Form>

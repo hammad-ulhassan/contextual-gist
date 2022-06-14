@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getUserGists } from "../../api/gists";
 import { getUser } from "../../api/user";
 import GistPreview from "../../components/GistPreview/GistPreview";
+import useCredentialContext from "../../hooks/useCredentialContext";
 import {
   ProfileTopRow,
   FCFCWrapper,
@@ -16,23 +17,29 @@ import {
 const MyProfile = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem('authUserData'));
+  const [myGists, setMyGists] = useState(null);
 
-  // useEffect(() => {
-  //   if (userDataStatus !== "succeeded") {
-  //     setLoading(true);
-  //   } else {
-  //     setSelectedUserData(userData);
-  //     if (authUserGistsStatus !== "succeeded") {
-  //       setLoading(true);
-  //     } else {
-  //       setLoading(false);
-  //       setSelectedUserGists(authUserGists);
-  //     }
-  //   }
+  useEffect(() => {
+    setLoading(true);
+    if (userData) {
+      getUserGists(userData?.login).then((gists) => {
+        setMyGists(gists);
+        setLoading(false);
+      });
+    }
+    else{
+      console.log('no userData', userData)
+    }
+  }, []);
 
-  const navigateToCreateGist = useCallback(()=>{
+  const navigateToCreateGist = useCallback(() => {
     navigate("/create");
-  })
+  }, [navigate]);
+
+  const navigateToProfile = useCallback(() => {
+    window.open(`https://github.com/${userData?.login}`);
+  }, [userData]);
 
   return (
     <HomePageLayout>
@@ -41,7 +48,7 @@ const MyProfile = () => {
         <Button onClick={navigateToCreateGist}>Create Gist</Button>
       </ProfileTopRow>
       <UserProfileWrapper>
-        {/* <FCFCWrapper>
+        <FCFCWrapper>
           <Avatar size={200} src={userData?.avatar_url} />
           <TextWordBreak>
             <Typography.Title level={4}>
@@ -60,12 +67,12 @@ const MyProfile = () => {
             <Spin size="large" />
           ) : (
             // JSON.stringify(authUserGists)
-            authUserGists?.length > 0 &&
-            authUserGists?.map((gist, index) => (
-              <GistPreview gist={gist} key={index} />
+            myGists?.length > 0 &&
+            myGists?.map((gist, index) => (
+              <GistPreview gist={gist.gist} key={index} />
             ))
           )}
-        </UserProfileGistsList> */}
+        </UserProfileGistsList>
       </UserProfileWrapper>
     </HomePageLayout>
   );

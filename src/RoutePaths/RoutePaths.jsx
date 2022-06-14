@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import CredentialContextProvider from "../contexts/CredentialContext";
 import PublicGistsContextProvider from "../contexts/PublicGistsContext";
 import CreateGist from "../pages/CreateGist/CreateGist";
 import EditGist from "../pages/EditGist/EditGist";
@@ -13,26 +14,28 @@ import UserPage from "../pages/UserPage/UserPage";
 export const RoutePaths = () => {
   return (
     <PublicGistsContextProvider>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route path="me" element={<MyProfile />} />
+      <CredentialContextProvider>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route path="me" element={<MyProfile />} />
 
-          <Route path="home" element={<Homepage />} />
+            <Route path="home" element={<Homepage />} />
 
-          <Route path="gist">
-            <Route path=":id" element={<GistPage />} />
+            <Route path="gist">
+              <Route path=":id" element={<GistPage />} />
+            </Route>
+            <Route path="user">
+              <Route path=":login" element={<UserPage />} />
+            </Route>
+            <Route path="create" element={<CreateGist />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="edit">
+              <Route path=":id" element={<EditGist />} />
+            </Route>
+            <Route path="login" element={<LoginPage />} />
           </Route>
-          <Route path="user">
-            <Route path=":login" element={<UserPage />} />
-          </Route>
-          <Route path="create" element={<CreateGist />} />
-          <Route path="search" element={<SearchPage />} />
-          <Route path="edit">
-            <Route path=":id" element={<EditGist />} />
-          </Route>
-          <Route path="login" element={<LoginPage />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </CredentialContextProvider>
     </PublicGistsContextProvider>
   );
 };
