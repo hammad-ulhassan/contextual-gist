@@ -1,29 +1,51 @@
 import { Avatar, Button, Dropdown } from "antd";
-import { useCallback,useContext} from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Context } from "../../GlobalContext/GlobalContext";
-import useCredentialContext from "../../hooks/useCredentialContext";
-import { AvatarWrapper, CFSWrapper, ContentWrapper, CSBWrapper, SearchBox } from "../../shared/components/styledComponent";
+import { useCallback, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CredentialContext } from "../../contexts/credentialContext/CredentialContextProvider";
+import { initialState } from "../../contexts/credentialContext/initialState";
+import { CREDENTIAL_STATE } from "../../globals/constants/localStorageAccessors";
+import {
+  AvatarWrapper,
+  CFSWrapper,
+  ContentWrapper,
+  CSBWrapper,
+  SearchBox,
+} from "../../shared/components/styledComponent";
 import Logo from "../Logo/Logo";
-import './Header.css'
+import "./Header.css";
 import MenuItems from "./menu";
 
-
-
 const Header = () => {
-  // let [, setSearchParams] = useSearchParams('');
   let navigate = useNavigate();
-  // const [state, dispatch] = useContext(Context);
+  const [state, setState] = useState(initialState);
 
-  const handleOnSearch = useCallback((user)=>{
-    // setSearchParams({user});
-    navigate(`/search?user=${user}`)
-  },[navigate]);
+  const handleOnSearch = useCallback(
+    (user) => {
+      navigate(`/search?user=${user}`);
+    },
+    [navigate]
+  );
 
-  const handleOnLogin = useCallback(()=>{
+  useEffect(()=>{
+    const myState = localStorage.getItem(CREDENTIAL_STATE);
+    if(myState){
+      let parsedState = JSON.parse(myState);
+      if(state.isLoggedIn !== parsedState.isLoggedIn){
+        setState(parsedState)
+      }
+    }
+  });
+
+  useEffect(() => {
+    if(state.isLoggedIn){
+      // console.log(state.username)
+
+    }
+  }, [state.isLoggedIn, state.username]);
+
+  const handleOnLogin = useCallback(() => {
     navigate(`/login`);
-  }, [navigate])
-
+  }, [navigate]);
 
   return (
     <header className="header-style emumba-bg">
@@ -39,18 +61,12 @@ const Header = () => {
               onSearch={handleOnSearch}
               enterButton={true}
             />
-            {!(1) ? (
+            {!state.isLoggedIn? (
               <Button onClick={handleOnLogin}>Login</Button>
             ) : (
-              <Dropdown
-                overlay={MenuItems}
-                placement="bottom"
-                arrow
-              >
+              <Dropdown overlay={MenuItems} placement="bottom" arrow>
                 <AvatarWrapper>
-                  <Avatar
-                    size={50}
-                  />
+                  <Avatar src={state?.authUserData?.avatar_url} size={50} />
                 </AvatarWrapper>
               </Dropdown>
             )}

@@ -7,8 +7,6 @@ import {
 } from "../../shared/components/styledComponent";
 
 // import { usePublicGists } from "../../hooks/usePublicGistsContext";
-import { getAllPublicGists } from "../../api/gists";
-import { Context } from "../../GlobalContext/GlobalContext";
 import {
   SETPAGE,
   SETPAGESIZE,

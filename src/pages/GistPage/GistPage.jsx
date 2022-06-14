@@ -11,6 +11,7 @@ import {
 import GistUtils from "../../components/GistUtils/GistUtils";
 import { getGist } from "../../api/gists";
 import { Context } from "../../GlobalContext/GlobalContext";
+import { PublicGistsContext } from "../../contexts/publicGistsContext/PublicGistsContextProvider";
 
 export const GistPage = () => {
   let { id } = useParams();
@@ -18,8 +19,6 @@ export const GistPage = () => {
   const [loaded, setLoaded] = useState(false);
   const [gistAllData, setGistAllData] = useState(null);
   const [showPersonalControls, setShowPersonalControls] = useState(false);
-
-  const [state, dispatch] = useContext(Context);
 
 
   const editGist = useCallback(() => {
@@ -42,10 +41,6 @@ export const GistPage = () => {
       setLoaded(true);
     });
   }, [id]);
-
-  useEffect(() => {
-    console.log(state.selectedGist)
-  }, [state.selectedGist]);
 
   return (
     <HomePageLayout>

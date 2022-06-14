@@ -1,4 +1,3 @@
-import moment from "moment";
 
 export const getUser = async ({login}) => {
   const response = await fetch(`https://api.github.com/users/${login}`, {

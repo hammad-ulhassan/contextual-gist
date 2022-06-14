@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import CredentialContextProvider from "../contexts/CredentialContext";
+import CredentialContextProvider from "../contexts/credentialContext/CredentialContextProvider";
 import PublicGistsContextProvider from "../contexts/publicGistsContext/PublicGistsContextProvider";
-import GlobalContextProvider from "../GlobalContext/GlobalContext";
 import CreateGist from "../pages/CreateGist/CreateGist";
 import EditGist from "../pages/EditGist/EditGist";
 import { GistPage } from "../pages/GistPage/GistPage";
@@ -38,7 +37,14 @@ export const RoutePaths = () => {
         <Route path="edit">
           <Route path=":id" element={<EditGist />} />
         </Route>
-        <Route path="login" element={<LoginPage />} />
+        <Route
+          path="login"
+          element={
+            <CredentialContextProvider>
+              <LoginPage />
+            </CredentialContextProvider>
+          }
+        />
       </Route>
     </Routes>
   );
