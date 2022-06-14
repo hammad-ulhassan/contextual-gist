@@ -1,4 +1,5 @@
 import moment from "moment";
+import { REACT_APP_ACCESS_TOKEN } from "../globals/constants/key";
 // import headers from "../credentials";
 
 export async function getAllPublicGists(page, pageSize) {
@@ -6,7 +7,7 @@ export async function getAllPublicGists(page, pageSize) {
     "https://api.github.com/gists/public?" +
       new URLSearchParams({ per_page: pageSize, page: page }),
     { headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
       Accept: "application/json",
     }), }
   );
@@ -28,7 +29,7 @@ export async function getAllPublicGists(page, pageSize) {
 export const getGist = async (id) => {
   const response = await fetch(`https://api.github.com/gists/${id}`, {
     headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
       Accept: "application/json",
     }),
   });
@@ -42,7 +43,7 @@ export const getGist = async (id) => {
 export const getUserGists = async (login) => {
   const resp = await fetch(`https://api.github.com/users/${login}/gists`, {
     headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
       Accept: "application/json",
     }),
   });
@@ -68,7 +69,7 @@ export const createGist = async (gistPostData) => {
   const resp = await fetch("https://api.github.com/gists", {
     method: "post",
     headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
       Accept: "application/json",
     }),
     body: JSON.stringify(gistPostData),
@@ -81,7 +82,7 @@ export const editGist = async (gist_id, gistPostData) => {
   const resp = await fetch(`https://api.github.com/gists/${gist_id}`, {
     method: "patch",
     headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
       Accept: "application/json",
     }),
     body: JSON.stringify(gistPostData),

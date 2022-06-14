@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
@@ -10,6 +10,7 @@ import {
 } from "../../shared/components/styledComponent";
 import GistUtils from "../../components/GistUtils/GistUtils";
 import { getGist } from "../../api/gists";
+import { Context } from "../../GlobalContext/GlobalContext";
 
 export const GistPage = () => {
   let { id } = useParams();
@@ -17,6 +18,9 @@ export const GistPage = () => {
   const [loaded, setLoaded] = useState(false);
   const [gistAllData, setGistAllData] = useState(null);
   const [showPersonalControls, setShowPersonalControls] = useState(false);
+
+  const [state, dispatch] = useContext(Context);
+
 
   const editGist = useCallback(() => {
     // navigate(`/edit/${gistAllData.id}`);
@@ -38,6 +42,10 @@ export const GistPage = () => {
       setLoaded(true);
     });
   }, [id]);
+
+  useEffect(() => {
+    console.log(state.selectedGist)
+  }, [state.selectedGist]);
 
   return (
     <HomePageLayout>

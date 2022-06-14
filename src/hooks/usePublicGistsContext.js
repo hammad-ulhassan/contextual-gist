@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PublicGistsContext } from "../contexts/PublicGistsContext";
+import { PublicGistsContext } from "../contexts/publicGistsContext/PublicGistsContextProvider";
 
 export function usePublicGists() {
     const context = useContext(PublicGistsContext);

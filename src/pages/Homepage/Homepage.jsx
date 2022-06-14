@@ -9,11 +9,17 @@ import {
 // import { usePublicGists } from "../../hooks/usePublicGistsContext";
 import { getAllPublicGists } from "../../api/gists";
 import { Context } from "../../GlobalContext/GlobalContext";
+import {
+  SETPAGE,
+  SETPAGESIZE,
+} from "../../globals/constants/actionTypes";
+import { PublicGistsContext } from "../../contexts/publicGistsContext/PublicGistsContextProvider";
+import fetchPublicGists from "../../contexts/publicGistsContext/getPublicGists";
 
 export default function Homepage() {
   const [view, setView] = useState("table");
   // const { gists, loading, setPage, setPageSize } = usePublicGists();
-  const [state, dispatch] = useContext(Context);
+  const {state, publicGistDispatch} = useContext(PublicGistsContext);
 
   const viewChange = useCallback((view) => {
     setView(view);
@@ -22,32 +28,18 @@ export default function Homepage() {
   const onPageChange = useCallback(
     (page, pageSize) => {
       if (page) {
-        dispatch({
-          type: "SET_PAGE",
-          payload: page,
-        });
+        publicGistDispatch({ type: SETPAGE, payload: page });
       }
       if (pageSize) {
-        dispatch({
-          type: "SET_PAGESIZE",
-          payload: pageSize,
-        });
+        publicGistDispatch({ type: SETPAGESIZE, payload: pageSize });
       }
     },
-    [dispatch]
+    [publicGistDispatch]
   );
-  
-  useEffect(() => {
-    console.log('hahah')
-  });
 
   useEffect(() => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    getAllPublicGists(state.page, state.pageSize).then((gists) => {
-      dispatch({ type: "SET_GISTS", payload: gists });
-      dispatch({ type: "SET_LOADING", payload: false });
-    });
-  }, [dispatch, state.page, state.pageSize]);
+    fetchPublicGists(state)(publicGistDispatch);
+  }, [state.page, state.pageSize]);
 
   return (
     <HomePageLayout>

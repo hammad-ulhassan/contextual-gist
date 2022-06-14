@@ -1,14 +1,14 @@
 import { Table, Tag } from "antd";
 import GistMeta from "../GistMeta/GistMeta";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import './Datatable.css';
+import "./Datatable.css";
 import { usePublicGists } from "../../hooks/usePublicGistsContext";
+import { Context } from "../../GlobalContext/GlobalContext";
+import { SETSELECTEDGIST, setSelectedGist } from "../../globals/constants/actionTypes";
 
 function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
-
   let navigate = useNavigate();
-
 
   const columns = [
     {
@@ -54,9 +54,7 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
       dataIndex: "actions",
       key: "actions",
       width: "8%",
-      render: (text, record, index) => {
-
-      },
+      render: (text, record, index) => {},
     },
   ];
 
@@ -71,7 +69,7 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
         defaultPageSize: 10,
         showSizeChanger: true,
         total: 1000,
-        onChange: (page, pageSize)=>onPageChange(page, pageSize),
+        onChange: (page, pageSize) => onPageChange(page, pageSize),
       }}
       onRow={(record, rowIndex) => {
         return {
@@ -84,4 +82,4 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
   );
 }
 
-export default React.memo(Datatable)
+export default React.memo(Datatable);

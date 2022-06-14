@@ -1,14 +1,14 @@
-import { BrowserRouter } from 'react-router-dom';
-import './App.css';
-import { RoutePaths } from './RoutePaths/RoutePaths';
+import { BrowserRouter } from "react-router-dom";
+import "./App.css";
+import GlobalContextProvider from "./GlobalContext/GlobalContext";
+import { RoutePaths } from "./RoutePaths/RoutePaths";
 
 function App() {
   return (
     <BrowserRouter>
-      <RoutePaths/>
+      <RoutePaths />
     </BrowserRouter>
   );
 }
 
 export default App;
-

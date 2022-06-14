@@ -1,6 +1,7 @@
 import { Avatar, Button, Dropdown } from "antd";
-import { useCallback } from "react";
+import { useCallback,useContext} from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Context } from "../../GlobalContext/GlobalContext";
 import useCredentialContext from "../../hooks/useCredentialContext";
 import { AvatarWrapper, CFSWrapper, ContentWrapper, CSBWrapper, SearchBox } from "../../shared/components/styledComponent";
 import Logo from "../Logo/Logo";
@@ -12,8 +13,7 @@ import MenuItems from "./menu";
 const Header = () => {
   // let [, setSearchParams] = useSearchParams('');
   let navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const authUserData = JSON.parse(localStorage.getItem('authUserData'));
+  // const [state, dispatch] = useContext(Context);
 
   const handleOnSearch = useCallback((user)=>{
     // setSearchParams({user});
@@ -39,7 +39,7 @@ const Header = () => {
               onSearch={handleOnSearch}
               enterButton={true}
             />
-            {!(isLoggedIn && authUserData) ? (
+            {!(1) ? (
               <Button onClick={handleOnLogin}>Login</Button>
             ) : (
               <Dropdown
@@ -49,7 +49,6 @@ const Header = () => {
               >
                 <AvatarWrapper>
                   <Avatar
-                    src={authUserData?.avatar_url}
                     size={50}
                   />
                 </AvatarWrapper>

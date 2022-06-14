@@ -1,0 +1,9 @@
+export const SETLOADING = 'SET_LOADING';
+export const SETGISTS= 'SET_GISTS';
+export const SETPAGE='SET_PAGE';
+export const SETPAGESIZE="SET_PAGESIZE";
+export const SETSELECTEDGIST="SET_SELECTEDGIST";
+export const SETUSERNAME='SET_USERNAME';
+export const SETTOKEN="SET_TOKEN";
+export const SETLOGGEDIN ='SET_LOGGEDIN';
+export const SETAUTHUSERDATA = 'SET_AUTHUSERDATA';
