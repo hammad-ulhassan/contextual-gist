@@ -61,6 +61,11 @@ const UserPage = () => {
     window.open(`https://github.com/${state.userData?.login}`);
   }, [state.userData]);
 
+
+  // const navigateToCreateGist = useCallback(() => {
+  //   navigate("/create");
+  // }, [navigate]);
+
   return (
     <HomePageLayout>
       <CFSWrapper>

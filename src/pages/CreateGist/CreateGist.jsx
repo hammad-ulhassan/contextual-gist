@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createGist } from "../../api/gists";
 import GistCreationForm from "../../components/GistCreationForm/GistCreationForm";
 import {
   CFSWrapper,
@@ -18,7 +19,8 @@ const CreateGist = () => {
 
   useEffect(() => {
     if (Object.keys(values).length !== 0) {
-      let gistPostData = transformGistFormDataForPost(values)
+      let gistPostData = transformGistFormDataForPost(values);
+      createGist(gistPostData).then(e=>console.log('haha'))
     navigate("/home");
 
     }

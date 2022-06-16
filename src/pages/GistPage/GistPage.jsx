@@ -62,7 +62,7 @@ export const GistPage = () => {
   }, [state.selectedGistId]);
 
   useEffect(() => {
-    if (state.selectedGistData) {
+    if (state.selectedGistData) { //destructure
       localStorage.setItem(SELECTED_GIST, JSON.stringify(state.selectedGistData));
       const myState = localStorage.getItem(CREDENTIAL_STATE);
       if (myState) {

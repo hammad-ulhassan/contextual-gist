@@ -1,10 +1,8 @@
 import { Avatar, Button, Dropdown } from "antd";
-import { useCallback, useState, useEffect, useContext } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthUserData, getUser } from "../../api/user";
-import { CredentialContext } from "../../contexts/credentialContext/CredentialContextProvider";
+import { getAuthUserData } from "../../api/user";
 import { initialState } from "../../contexts/credentialContext/initialState";
-import { REMOVECREDENTIALS } from "../../globals/constants/actionTypes";
 import { CREDENTIAL_STATE } from "../../globals/constants/localStorageAccessors";
 import {
   AvatarWrapper,
@@ -25,7 +23,10 @@ const Header = () => {
 
   const handleOnSearch = useCallback(
     (user) => {
-      navigate(`/search?user=${user}`);
+      if (user) {
+        navigate(`/search?user=${user}`);
+      } else {
+      }
     },
     [navigate]
   );
@@ -50,11 +51,12 @@ const Header = () => {
   }, [credentialState, state.isLoggedIn]);
 
   useEffect(() => {
-    console.info('THISSSSS')
-    if(state.isLoggedIn){
-      getAuthUserData().then(userData=>{
-        setState({...state, authUserData: userData})
-      })
+    if (state.isLoggedIn && !state.authUserData) {
+      console.info("THISSSSS");
+
+      getAuthUserData().then((userData) => {
+        setState({ ...state, authUserData: userData });
+      });
     }
   }, [state.isLoggedIn]);
 
@@ -73,7 +75,7 @@ const Header = () => {
       })
     );
     setState(initialState);
-    navigate("/home")
+    navigate("/home");
   }, [navigate]);
 
   return (
