@@ -8,9 +8,10 @@ import { useCallback, useContext, useEffect } from "react";
 import { SETCREDENTIALS } from "../../globals/constants/actionTypes";
 import { CredentialContext } from "../../contexts/credentialContext/CredentialContextProvider";
 import fetchAuthUserData from "../../contexts/credentialContext/getAuthUserData";
+import { CREDENTIAL_STATE } from "../../globals/constants/localStorageAccessors";
 
 function LoginPage() {
-  const { state, credentialDispatch } = useContext(CredentialContext);
+  // const { state, credentialDispatch } = useContext(CredentialContext);
 
   const initialValues = {
     username: "",
@@ -20,28 +21,19 @@ function LoginPage() {
 
   const myValidationSchema = validationSchema;
 
-  useEffect(() => {
-    if (state.authUserData) {
-      navigate("/home");
-    }
-  }, [navigate, state.authUserData]);
+  const submitAction = useCallback(({ username, token }, actions) => {
+    localStorage.setItem(
+      CREDENTIAL_STATE,
+      JSON.stringify({
+        username,
+        token,
+        isLoggedIn: true,
+        authUserData: null,
+      })
+    );
+    navigate("/home");
 
-  useEffect(() => {
-    if (state.isLoggedIn) {
-      fetchAuthUserData(state)(credentialDispatch);
-      // console.log(state)
-    }
-  }, [credentialDispatch, state, state.isLoggedIn]);
-
-  const submitAction = useCallback(
-    ({ username, token }, actions) => {
-      credentialDispatch({
-        type: SETCREDENTIALS,
-        payload: { username, token },
-      });
-    },
-    [credentialDispatch]
-  );
+  }, [navigate]);
 
   return (
     <Formik

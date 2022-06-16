@@ -26,6 +26,22 @@ export async function getAllPublicGists(page, pageSize) {
   return res;
 }
 
+export const forkGist = async (id) => {
+  const response = await fetch(`https://api.github.com/gists/${id}/forks`, {
+  method: 'post',
+  headers: new Headers({
+      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
+      Accept: "application/json",
+    }),
+  });
+  if (!response.ok) {
+    throw new Error("Gist Data coud not be fetched!");
+  } else {
+    const res = await response.json();
+    return res;
+  }
+};
+
 export const getGist = async (id) => {
   const response = await fetch(`https://api.github.com/gists/${id}`, {
     headers: new Headers({
@@ -40,6 +56,8 @@ export const getGist = async (id) => {
     return res;
   }
 };
+
+
 export const getUserGists = async (login) => {
   const resp = await fetch(`https://api.github.com/users/${login}/gists`, {
     headers: new Headers({

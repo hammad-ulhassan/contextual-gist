@@ -1,22 +1,22 @@
-import { SETAUTHUSERDATA, SETCREDENTIALS } from "../../globals/constants/actionTypes";
+import { REMOVECREDENTIALS, SETCREDENTIALS } from "../../globals/constants/actionTypes";
 
 const credentialReducer = (state, {type, payload}) => {
     switch(type){
         case SETCREDENTIALS:
-            console.log('dispatched')
             return{
                 ...state,
                 username: payload.username,
                 token: payload.token,
                 isLoggedIn: true
             }
-
-        case SETAUTHUSERDATA:
+        case REMOVECREDENTIALS:
             return{
                 ...state,
-                authUserData: payload
+                username: null,
+                authUserData: null,
+                token:null,
+                isLoggedIn: false
             }
-
 
         default:
             return state;

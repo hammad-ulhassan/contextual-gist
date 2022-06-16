@@ -1,1 +1,2 @@
 export const CREDENTIAL_STATE = "CREDENTIAL_STATE";
+export const SELECTED_GIST = 'SELECTED_GIST';

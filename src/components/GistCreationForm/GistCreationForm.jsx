@@ -12,11 +12,19 @@ import {
   SUBMIT,
 } from "./constants";
 import InputTextArea from "../InputTextArea/InputTextArea";
+import { useContext } from "react";
+import { EditGistContext } from "../../contexts/editGistContext/provider";
 
-export default function GistCreationForm({ description, files, onSubmitForm}) {
+export default function GistCreationForm({
+  //  description,
+    // files, 
+    onSubmitForm}) {
+  
+  const { state, dispatch } = useContext(EditGistContext);
+
   const initalValues = {
-    description: description ?? "",
-    files: files ?? [],
+    description: state.description ?? "",
+    files: state.files ?? [],
   };
   return (
     <>

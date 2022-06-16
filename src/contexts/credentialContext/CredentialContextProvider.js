@@ -12,12 +12,20 @@ export default function CredentialContextProvider({ children }) {
   );
 
   useEffect(() => {
-    localStorage.setItem(CREDENTIAL_STATE, JSON.stringify(state));
-}, [state]);
+    const credentialState = localStorage.getItem(CREDENTIAL_STATE);
+
+    if (!credentialState || !JSON.parse(credentialState)?.isLoggedIn) {
+      localStorage.setItem(CREDENTIAL_STATE, JSON.stringify(state));
+    }
+  }, [state]);
 
   return (
-    <CredentialContext.Provider value={{ 
-        state, credentialDispatch }}>
+    <CredentialContext.Provider
+      value={{
+        state,
+        credentialDispatch,
+      }}
+    >
       {children}
     </CredentialContext.Provider>
   );

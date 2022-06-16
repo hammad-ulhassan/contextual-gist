@@ -1,16 +1,18 @@
-import { Button, Menu } from "antd"
-import { Link } from "react-router-dom";
+import { Button, Menu } from "antd";
+import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 
+const MenuItems = ({credentialState, handleLogout}) => {
 
-const ourMenu = (items) => <Menu items={[...items]} />;
-
-const MenuItems = [
+  
+  
+  const menuItems = [
     {
       label: (
         <>
-          <Link to="/me">
+          <Link to={`/user/${credentialState?.username}`} reloadDocument={true}>
             <h5>Signed in as</h5>
-            {/* <h4>{store.getState().logins.token.username}</h4> */}
+            <h3>{credentialState?.username}</h3>
           </Link>
         </>
       ),
@@ -20,24 +22,31 @@ const MenuItems = [
       disabled: true,
     },
     {
-      label: <Link to="/me">Your Gists</Link>,
+      label: <Link to={`/user/${credentialState?.username}`}>Your Gists</Link>,
     },
     {
-      label: <Link to="/me">Your Starred Gists</Link>,
+      label: <Link to={`/user/${credentialState?.username}`}>Your Starred Gists</Link>,
     },
     {
-      label: <Link to="/me">Help</Link>,
+      label: <Link to={`/user/${credentialState?.username}`}>Help</Link>,
     },
     {
       label: <hr />,
       disabled: true,
     },
     {
-      label: <Link to="/me">Your Github Profile</Link>,
+      label: <Link to={`/user/${credentialState?.username}`}>Your Github Profile</Link>,
     },
     {
-      label: <Button onClick={null} type="link">Sign Out</Button>,
+      label: (
+        <Button onClick={handleLogout} type="link">
+          Sign Out
+        </Button>
+      ),
     },
   ];
 
-  export default ourMenu(MenuItems);
+  return <Menu items={[...menuItems]} />;
+};
+
+export default MenuItems;

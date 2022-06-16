@@ -1,27 +1,30 @@
 import { Button } from "antd";
 import {
-    StarOutlined,
-    ForkOutlined,
-    DeleteOutlined,
-    EditOutlined,
-  } from "@ant-design/icons";
+  StarOutlined,
+  ForkOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import {
   CSBWrapper,
   NumberDisplay,
 } from "../../shared/components/styledComponent";
+import { useContext, useEffect, useState } from "react";
+import { SelectedGistContext } from "../../contexts/gistPageContext/provider";
+import { CREDENTIAL_STATE } from "../../globals/constants/localStorageAccessors";
 
 const GistUtils = ({
   handleGistEdit,
   handleGistDelete,
   handleGistStar,
   handleForkGist,
-  forks,
-  isLoggedIn,
-  showPersonalControls,
+  // showPersonalControls,
 }) => {
+  const { state, dispatch } = useContext(SelectedGistContext);
+
   return (
     <CSBWrapper>
-      {showPersonalControls ? (
+      {state.showPersonalControls ? (
         <>
           <CSBWrapper>
             <Button
@@ -43,7 +46,7 @@ const GistUtils = ({
           </CSBWrapper>
         </>
       ) : null}
-      {isLoggedIn ? (
+      {state.isLoggedIn ? (
         <>
           <CSBWrapper>
             <Button
@@ -63,7 +66,7 @@ const GistUtils = ({
             >
               Fork
             </Button>
-            <NumberDisplay>{forks.length}</NumberDisplay>
+            <NumberDisplay>{state.forks.length}</NumberDisplay>
           </CSBWrapper>
         </>
       ) : null}

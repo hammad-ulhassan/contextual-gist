@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import { useCallback, useEffect, useMemo, useState, useContext } from "react";
+import { useCallback, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GistCard from "../../components/GistCard/GistCard";
 import GistMeta from "../../components/GistMeta/GistMeta";
@@ -9,67 +9,114 @@ import {
   HomePageLayout,
 } from "../../shared/components/styledComponent";
 import GistUtils from "../../components/GistUtils/GistUtils";
-import { getGist } from "../../api/gists";
-import { Context } from "../../GlobalContext/GlobalContext";
-import { PublicGistsContext } from "../../contexts/publicGistsContext/PublicGistsContextProvider";
+import { SelectedGistContext } from "../../contexts/gistPageContext/provider";
+import {
+  SETFORKS,
+  SETLOGGEDIN,
+  SETSELECTEDGISTID,
+  SETSHOWPERSONALCONTROLS,
+} from "../../globals/constants/actionTypes";
+import fetchGistData from "../../contexts/gistPageContext/getGistData";
+import { CREDENTIAL_STATE, SELECTED_GIST } from "../../globals/constants/localStorageAccessors";
+import forkGist from "../../contexts/gistPageContext/forkGist";
 
 export const GistPage = () => {
   let { id } = useParams();
+  const { state, dispatch } = useContext(SelectedGistContext);
   const navigate = useNavigate();
-  const [loaded, setLoaded] = useState(false);
-  const [gistAllData, setGistAllData] = useState(null);
-  const [showPersonalControls, setShowPersonalControls] = useState(false);
-
 
   const editGist = useCallback(() => {
-    // navigate(`/edit/${gistAllData.id}`);
+    console.log(state.selectedGistId)
+    navigate(`/edit/${state.selectedGistId}`);
   }, []);
 
   function deleteGist() {}
 
-  function onForkGist() {}
+  function onForkGist() {
+    forkGist(state)(dispatch);
+  }
 
   function onStarGist() {
     //[redundancy todo]
   }
 
   useEffect(() => {
-    setLoaded(false);
+    if(state.forkedResponse){
+      //todo //inifite aa raha hai
+    }
+  }, [state.forkedResponse]);
 
-    getGist(id).then((selectedGistAllData) => {
-      setGistAllData(selectedGistAllData);
-      setLoaded(true);
-    });
+  useEffect(() => {
+    if (id) {
+      dispatch({
+        type: SETSELECTEDGISTID,
+        payload: id,
+      });
+    }
   }, [id]);
+
+  useEffect(() => {
+    if (state.selectedGistId) {
+      fetchGistData(state)(dispatch);
+    }
+  }, [state.selectedGistId]);
+
+  useEffect(() => {
+    if (state.selectedGistData) {
+      localStorage.setItem(SELECTED_GIST, JSON.stringify(state.selectedGistData));
+      const myState = localStorage.getItem(CREDENTIAL_STATE);
+      if (myState) {
+        let parsedState = JSON.parse(myState);
+        dispatch({
+          type: SETLOGGEDIN,
+          payload: parsedState.isLoggedIn,
+        });
+        if (parsedState.username === state.selectedGistData?.owner?.login) {
+          dispatch({
+            type: SETSHOWPERSONALCONTROLS,
+            payload: true,
+          });
+        } else {
+          dispatch({
+            type: SETSHOWPERSONALCONTROLS,
+            payload: false,
+          });
+        }
+      }
+      dispatch({
+        type: SETFORKS,
+        payload: state.selectedGistData?.forks,
+      });
+    }
+  }, [dispatch, state.selectedGistData]);
 
   return (
     <HomePageLayout>
       <CSBWrapper>
         {/* {JSON.stringify(selectedGist)} */}
-        {loaded ? <GistMeta isInTable={false} gist={gistAllData} /> : null}
-        {loaded ? (
+        {!state.loading ? (
+          <GistMeta isInTable={false} gist={state.selectedGistData} />
+        ) : null}
+        {!state.loading ? (
           <GistUtils
-            forks={gistAllData?.forks}
-            showPersonalControls={showPersonalControls}
-            isLoggedIn={true}
-            handleGistEdit={editGist}
-            handleGistDelete={deleteGist}
-            handleForkGist={onForkGist}
-            handleGistStar={onStarGist}
+          handleGistEdit={editGist}
+          handleGistDelete={deleteGist}
+          handleForkGist={onForkGist}
+          handleGistStar={onStarGist}
           />
         ) : null}
       </CSBWrapper>
       <ColFSWrapper gap="0.5vh">
-        {loaded ? (
-          Object.keys(gistAllData?.files)
-            .map((fn) => gistAllData?.files[fn])
+        {!state.loading && state.selectedGistData ? (
+          Object.keys(state.selectedGistData?.files)
+            .map((fn) => state.selectedGistData?.files[fn])
             .map((file, index) => (
               <GistCard
-                style={{ minWidth: "100%", margin: "1%" }}
-                filename={file.filename}
-                content={file.content}
-                language={file.language}
-                key={index}
+              style={{ minWidth: "100%", margin: "1%" }}
+              filename={file.filename}
+              content={file.content}
+              language={file.language}
+              key={index}
               />
             ))
         ) : (

@@ -3,12 +3,13 @@ import GistMeta from "../GistMeta/GistMeta";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Datatable.css";
-import { usePublicGists } from "../../hooks/usePublicGistsContext";
-import { Context } from "../../GlobalContext/GlobalContext";
-import { SETSELECTEDGIST, setSelectedGist } from "../../globals/constants/actionTypes";
+import { PublicGistsContext } from "../../contexts/publicGistsContext/PublicGistsContextProvider";
+import { SETSELECTEDGIST } from "../../globals/constants/actionTypes";
 
 function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
   let navigate = useNavigate();
+  const {state, publicGistDispatch} = useContext(PublicGistsContext);
+
 
   const columns = [
     {
@@ -74,6 +75,11 @@ function Datatable({ data, selectedRowKeys, loading, onPageChange }) {
       onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
+            // setSelectedGist(record.gist);
+            publicGistDispatch({
+              type: SETSELECTEDGIST,
+              payload: record.gist
+            })
             navigate(`/gist/${record.gist.id}`);
           },
         };

@@ -1,5 +1,6 @@
+import { CREDENTIAL_STATE } from "../globals/constants/localStorageAccessors";
 
-export const getUser = async ({login}) => {
+export const getUser = async (login) => {
   const response = await fetch(`https://api.github.com/users/${login}`, {
     headers: new Headers({
       Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
@@ -15,9 +16,12 @@ export const getUser = async ({login}) => {
 };
 
 export const getAuthUserData = async () => {
+
+  const authToken = JSON.parse(localStorage.getItem(CREDENTIAL_STATE))?.token || process.env.REACT_APP_ACCESS_TOKEN
+
   const response = await fetch(`https://api.github.com/user`, {
     headers: new Headers({
-      Authorization: `Bearer ${process.env.REACT_APP_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${authToken}`,
       Accept: "application/json",
     }),
   });

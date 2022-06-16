@@ -1,4 +1,4 @@
-import { SETGISTS, SETLOADING, SETPAGE, SETPAGESIZE } from "../../globals/constants/actionTypes";
+import {SETGISTS, SETLOADING, SETPAGE, SETPAGESIZE, SETSELECTEDGIST, SETSELECTEDGISTDATA } from "../../globals/constants/actionTypes";
 
 const publicGistsReducer = (state, {type, payload}) =>{
     switch(type){
@@ -22,6 +22,16 @@ const publicGistsReducer = (state, {type, payload}) =>{
             return{
                 ...state,
                 pageSize: payload
+            }
+        case SETSELECTEDGIST:
+            return{
+                ...state,
+                selectedGist: payload
+            }
+        case SETSELECTEDGISTDATA:
+            return{
+                ...state,
+                selectedGistData: payload
             }
         default:
             return state

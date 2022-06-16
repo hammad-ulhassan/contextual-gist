@@ -1,8 +1,10 @@
 import { Avatar, Button, Dropdown } from "antd";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getAuthUserData, getUser } from "../../api/user";
 import { CredentialContext } from "../../contexts/credentialContext/CredentialContextProvider";
 import { initialState } from "../../contexts/credentialContext/initialState";
+import { REMOVECREDENTIALS } from "../../globals/constants/actionTypes";
 import { CREDENTIAL_STATE } from "../../globals/constants/localStorageAccessors";
 import {
   AvatarWrapper,
@@ -19,6 +21,8 @@ const Header = () => {
   let navigate = useNavigate();
   const [state, setState] = useState(initialState);
 
+  const credentialState = JSON.parse(localStorage.getItem(CREDENTIAL_STATE));
+
   const handleOnSearch = useCallback(
     (user) => {
       navigate(`/search?user=${user}`);
@@ -26,25 +30,50 @@ const Header = () => {
     [navigate]
   );
 
-  useEffect(()=>{
-    const myState = localStorage.getItem(CREDENTIAL_STATE);
-    if(myState){
-      let parsedState = JSON.parse(myState);
-      if(state.isLoggedIn !== parsedState.isLoggedIn){
-        setState(parsedState)
+  useEffect(() => {
+    if (!credentialState || credentialState.isLoggedIn === false) {
+      localStorage.setItem(
+        CREDENTIAL_STATE,
+        JSON.stringify({
+          username: null,
+          token: null,
+          isLoggedIn: false,
+          authUserData: null,
+        })
+      );
+    } else {
+      // setState(credentialState)
+      if (!state.isLoggedIn) {
+        setState(credentialState);
       }
     }
-  });
+  }, [credentialState, state.isLoggedIn]);
 
   useEffect(() => {
+    console.info('THISSSSS')
     if(state.isLoggedIn){
-      // console.log(state.username)
-
+      getAuthUserData().then(userData=>{
+        setState({...state, authUserData: userData})
+      })
     }
-  }, [state.isLoggedIn, state.username]);
+  }, [state.isLoggedIn]);
 
   const handleOnLogin = useCallback(() => {
     navigate(`/login`);
+  }, [navigate]);
+
+  const onHandleLogout = useCallback(() => {
+    localStorage.setItem(
+      CREDENTIAL_STATE,
+      JSON.stringify({
+        username: null,
+        token: null,
+        isLoggedIn: false,
+        authUserData: null,
+      })
+    );
+    setState(initialState);
+    navigate("/home")
   }, [navigate]);
 
   return (
@@ -61,12 +90,25 @@ const Header = () => {
               onSearch={handleOnSearch}
               enterButton={true}
             />
-            {!state.isLoggedIn? (
+            {!state.isLoggedIn ? (
               <Button onClick={handleOnLogin}>Login</Button>
             ) : (
-              <Dropdown overlay={MenuItems} placement="bottom" arrow>
+              <Dropdown
+                overlay={
+                  <MenuItems
+                    credentialState={state}
+                    handleLogout={onHandleLogout}
+                  />
+                }
+                placement="bottom"
+                arrow
+              >
                 <AvatarWrapper>
-                  <Avatar src={state?.authUserData?.avatar_url} size={50} />
+                  {state?.authUserData?.avatar_url ? (
+                    <Avatar src={state?.authUserData?.avatar_url} size={50} />
+                  ) : (
+                    <Avatar size={50}>😀</Avatar>
+                  )}
                 </AvatarWrapper>
               </Dropdown>
             )}
